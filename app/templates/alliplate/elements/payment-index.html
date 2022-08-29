@@ -1,0 +1,30 @@
+{% if wallet|length>0 %}
+<table style="margin:3%;width: 94%;" class="table table-striped">
+    <thead>
+    <tr>
+	    <td width="250px" style="vertical-align: top;">
+    
+					Order for {{name}} is 
+                    {% if status==0 %}
+                    made and awaits payment.<br>
+                    {% else %}
+                    {{status}}<br>
+                    {% endif %}
+                    Price in {{crypto_name}} {{price}}<br>
+                    Please pay to:<br>
+                    {{wallet}}<br>
+                    Click this link to open wallet for payment: {{link|safe}}
+                    </td>
+ 
+    </tr>
+    </thead>
+</table>
+{% else %}
+<table style="margin:3%;width: 94%;" class="table table-striped">
+    <thead>
+    <tr>
+        <th colspan="100%">No such item (404)</th>
+    </tr>
+    </thead>
+</table>
+{% endif %}

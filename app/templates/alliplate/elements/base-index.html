@@ -1,0 +1,46 @@
+
+{% if items|length>0 %}
+        <table style="margin:3%;width: 94%;" class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="100%">Offers:</th>
+                </tr>
+            </thead>
+{% for item in items %}
+ <tr>
+                    <td width="250px" style="vertical-align: top;">
+                        <div "float-left popover popover-right">
+                        <img style="max-width: 220px;" class="card mx-2" align="left" src="/picture/{{item.pic_name}}">
+                        </div>
+                    </td>
+
+                    </td>
+                    <td width="85%:" style="vertical-align: top;">
+                        <h3><a href="/item/{{item.id}}/">{{item.name}}</a></h3>
+                        <h6>
+                        Price:
+                        {% if item.fiat_crypto_main_flag=='fiat'%}
+                        {{(item.price_fiat|round(2)|string).rstrip('0').rstrip('.')}}{{fiat_name}}
+                        {% endif %}
+
+                        {% if item.fiat_crypto_main_flag=='crypto'%}
+                        {{(item.price_crypto|round(4)|string).rstrip('0').rstrip('.')}}{{crypto_name}}
+                        {% endif %}
+                        </h6>
+                        {{item.description|safe}}
+                    </td>
+ </tr>
+{% endfor %}
+
+</table>
+
+
+{% else %}
+<table style="margin:3%;width: 94%;" class="table table-striped">
+    <thead>
+    <tr>
+        <th colspan="100%">No items</th>
+    </tr>
+    </thead>
+</table>
+{% endif %}

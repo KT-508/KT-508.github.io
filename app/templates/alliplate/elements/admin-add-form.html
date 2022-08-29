@@ -1,0 +1,40 @@
+    <div class="flex-centered">
+        <div style="width: 90%;" class="card s-rounded">
+            <form class="form-group" method="POST">
+                <label>{{form.name.label}}</label>
+                <input type="text" name="{{form.name.name}}" value="{{items[0].name}}">
+                <hr>
+                <label>{{form.price_crypto.label}}</label>
+                <input type="text" name="{{form.price_crypto.name}}" value="{{items[0].price_crypto}}">
+                <label>{{form.price_fiat.label}}</label>
+                <input type="text" name="{{form.price_fiat.name}}" value="{{items[0].price_fiat}}">
+                <hr>
+                <label>{{form.pic_name.label}}</label>
+                <input type="text" name="{{form.pic_name.name}}" value="{{items[0].pic_name}}">
+                <hr>
+                Tailor price to:
+                <div class="form-group" style="margin-left:20px;">
+                    <label class="form-radio form-inline">
+                        <input type="radio" name="currency" value=1 checked=""><i class="form-icon"></i> Fiat
+                    </label>
+                    <label class="form-radio form-inline">
+                        <input type="radio" name="currency" value=2><i class="form-icon"></i> Crypto
+                    </label>
+                </div>
+                <hr>
+                <label>{{form.short_description.label}}</label>
+                <input type="text" name="{{form.short_description.name}}" value="{{items[0].short_description}}">
+                <label>{{form.amount.label}}</label>
+                <input type="text" name="{{form.amount.name}}" value="{{items[0].amount}}">
+                <label>{{form.amount_palette.label}}</label>
+                <br>
+                <input type="text" name="{{form.amount_palette.name}}" value="{{items[0].amount_palette}}">
+
+				<br>
+                <label>{{form.description.label}}</label>
+                <br>
+                <textarea style="width: 80%;" rows="10" name="{{form.description.name}}" >{{items[0].description}}</textarea>
+                <input type="submit" class="btn btn-primary">
+            </form>
+        </div>
+    </div>

@@ -1,0 +1,53 @@
+   {% if items|length>0 %}
+
+        <table style="margin:3%;width: 94%;" class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="100%">Items listed:</th>
+                </tr>
+            </thead>
+            {% for item in items %}
+                <tr>
+                    <td width="25%;">
+
+                        <h3>{{item.name}}</h3>
+                        <hr>
+                        {% if item.fiat_crypto_main_flag=='fiat'%}
+                        <b>
+                        {% endif %}
+                        {{"%.2f"|format(item.price_fiat)}} {{item.price_fiat_relation.name}}
+                        {% if item.fiat_crypto_main_flag=='fiat'%}
+                        </b>
+                        {% endif %}
+                        <br>
+                        {% if item.fiat_crypto_main_flag=='crypto'%}
+                        <b>
+                        {% endif %}
+                        {{"%.5f"|format(item.price_crypto)}} {{item.price_crypto_relation.name}}
+                                                 {% if item.fiat_crypto_main_flag=='crypto'%}
+                        </b>
+                        {% endif %}
+                            <br><br><br>
+                        <a href="/admin_modify/modify/{{item.id}}"><button class="btn">Modify {{item.name|truncate (10,True)}}</button></a>
+                        <a href="/admin_modify/delete/{{item.id}}"><button class="btn btn-error">Delete</button></a>
+                    </td>
+                    <td>
+                        <div class="card d-inline">
+                            <div class="card-header">
+                                {{item.description|safe}}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <table style="margin:3%;width: 94%;" class="table table-striped">
+            <thead>
+                <tr>
+                    <th colspan="100%">No items</th>
+                </tr>
+            </thead>
+        </table>
+    {% endif %}

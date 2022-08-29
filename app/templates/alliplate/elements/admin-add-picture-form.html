@@ -1,0 +1,130 @@
+<div class="flex-centered">
+    <canvas style="border:1px solid grey;" id="img_canvas" width="800" height="600"></canvas>
+
+    <div class="card s-rounded">
+        <br/>
+        <form id="new_picture_attachment"  method="POST" onsubmit="prepareImg()">
+            <input type="file" class="btn btn-link" accept="image/*" name="imageFile" id="picture_attachment_doc" onchange="selectImage();"/>
+
+            <label class="form-label" for="master-key">Picture id to use, like <i>![-<b>pic_id</b>-]</i><br><small>800x600
+                is best size, bigger picture will be resized to fit</small></label>
+            <input class="form-input" type="text" id="master-key" name="{{form.name.name}}">
+            <input id="inp_img" name="{{form.picture.name}}" type="hidden" value="">
+
+
+            <input type="submit" class="btn btn-primary">
+            <img id="palette">
+        </form>
+    </div>
+</div>
+<script>
+
+    function selectImage() {
+        var selectedImage = new Image();
+
+        selectedImage.onload=function (ev) {
+            var canvas = document.getElementById('img_canvas');
+            var ctx = canvas.getContext("2d");
+            //console.log(selectedImage, (canvas.width-selectedImage.width)/2, (canvas.height- selectedImage.height) / 2 );
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(selectedImage, (canvas.width-selectedImage.width)/2, (canvas.height- selectedImage.height) / 2);
+
+        }
+        var fileSelector = document.getElementById('picture_attachment_doc');
+        var fileImage = fileSelector.files[0];
+        read = new FileReader();
+        read.onload = function (event) {
+            selectedImage.src = read.result; //#fixme remove EXIF here
+            var hidden_field=document.getElementById('inp_img');
+            hidden_field.value=selectedImage.src;
+
+            //document.write('<br><br><br>Your image in canvas: <img src="' + selectedImage.src + '"/>');
+            //console.log(canvas.width,selectedImage.width);
+        }
+        read.readAsDataURL(fileImage);
+
+
+    }
+
+    var CLIPBOARD = new CLIPBOARD_CLASS("img_canvas", false);
+
+    /**
+     * image pasting into canvas
+     *
+     * @param {string} canvas_id - canvas id
+     * @param {boolean} autoresize - if canvas will be resized
+     */
+    function CLIPBOARD_CLASS(canvas_id, autoresize) {
+        var _self = this;
+        var canvas = document.getElementById(canvas_id);
+        var ctx = document.getElementById(canvas_id).getContext("2d");
+
+        //handlers
+        document.addEventListener('paste', function (e) {
+            _self.paste_auto(e);
+        }, false);
+
+        //on paste
+        this.paste_auto = function (e) {
+            if (e.clipboardData) {
+                var items = e.clipboardData.items;
+                if (!items) return;
+
+                //access data directly
+                var is_image = false;
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf("image") !== -1) {
+                        //image
+                        var blob = items[i].getAsFile();
+                        var URLObj = window.URL || window.webkitURL;
+                        var source = URLObj.createObjectURL(blob);
+                        var reader = new FileReader();
+                        reader.readAsDataURL(blob);
+                        reader.onloadend = function() {
+                            var base64data = reader.result;
+                            console.log(base64data);
+                            source=base64data;
+                            //parent.paste_createImage(base64data)фи
+                        }
+
+                        //console.table(fetch(source));
+                        this.paste_createImage(source);
+                        is_image = true;
+                    }
+                }
+                if (is_image == true) {
+                    e.preventDefault();
+                }
+            }
+        };
+        //draw pasted image to canvas
+        this.paste_createImage = function (source) {
+            var pastedImage = new Image();
+            pastedImage.onload = function () {
+                var hidden_field=document.getElementById('inp_img');
+                hidden_field.value=pastedImage.src;
+
+                if (autoresize == true) {
+                    //resize
+                    canvas.width = pastedImage.width;
+                    canvas.height = pastedImage.height;
+                } else {
+                    //clear canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+                if (pastedImage.width > 800 || pastedImage.height > 600) {
+                    imageRatio = pastedImage.width / pastedImage.height;
+                    //#fixme use imageRatio to resize big pasted picture
+
+
+                    ctx.drawImage(pastedImage, 0, 0, pastedImage.width, pastedImage.height, 0, 0, canvas.width, canvas.height);
+                } else {
+                    ctx.drawImage(pastedImage, canvas.width / 2 - pastedImage.width / 2, canvas.width / 2 - pastedImage.width / 2)
+                }
+            };
+            pastedImage.src = source;
+            //console.table(source);
+
+        };
+    }
+</script>
